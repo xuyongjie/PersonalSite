@@ -8,9 +8,10 @@ using XYJPersonalSite.Data;
 namespace XYJPersonalSite.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161010121158_init_datatable")]
+    partial class init_datatable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -238,8 +239,6 @@ namespace XYJPersonalSite.Data.Migrations
 
                     b.Property<string>("Nickname")
                         .IsRequired();
-
-                    b.Property<int>("ToCommentId");
 
                     b.HasKey("Id");
 

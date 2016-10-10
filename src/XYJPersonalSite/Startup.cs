@@ -43,7 +43,16 @@ namespace XYJPersonalSite
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(
+                                // config password validation
+                                o =>
+                                {
+                                    o.Password.RequireDigit = false;
+                                    o.Password.RequireLowercase = false;
+                                    o.Password.RequireNonAlphanumeric = false;
+                                    o.Password.RequireUppercase = false;
+
+                                })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -83,6 +92,7 @@ namespace XYJPersonalSite
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            SeedData.Initialize(app.ApplicationServices);
         }
     }
 }
