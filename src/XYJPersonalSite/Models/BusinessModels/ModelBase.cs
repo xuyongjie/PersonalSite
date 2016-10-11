@@ -9,8 +9,12 @@ namespace XYJPersonalSite.Models.BusinessModels
     public class ModelBase
     {
         [Required]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString ="{0:yyyy-MM-dd HH:mm:ss}")]
         public DateTime CreateTime { get; set; }
         [Required]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm:ss}")]
         public DateTime ModifyTime { get; set; }
     }
 }
