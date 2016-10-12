@@ -10,6 +10,7 @@ using XYJPersonalSite.Models.BusinessModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using XYJPersonalSite.Models;
+using XYJPersonalSite.Repo;
 
 namespace XYJPersonalSite.Controllers
 {
@@ -21,10 +22,13 @@ namespace XYJPersonalSite.Controllers
 
         private readonly ApplicationDbContext _context;
 
+        private readonly IBaseRepo<Blog,int> _repo;
+
         public BlogsController(ApplicationDbContext context,
                     UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager)
         {
+            _repo = new BlogsRepo(context);
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
