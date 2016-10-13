@@ -13,7 +13,7 @@ namespace XYJPersonalSite.Models.BusinessModels
         public string Title { get; set; }
         [Required]
         public string Summary { get; set; }
-        public Media Content { get; set; }
+        public string Content { get; set; }
         public int ReadCount { get; set; }
         public int LikeCount { get; set; }
         public List<Comment> Comments { get; set; }

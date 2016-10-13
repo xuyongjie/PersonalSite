@@ -26,24 +26,32 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">XYJPersonalSite</a>
+                <a asp-area="" asp-controller="Blogs" asp-action="Index" class="navbar-brand">xuyongjie</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li><a asp-area="" asp-controller="Blogs" asp-action="Index">Blogs</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                    <li><a asp-area="" asp-controller="Blogs" asp-action="Index">Blogs</a></li>
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
             </div>
         </div>
     </div>
     <div class="container body-content">
-        @RenderBody()
+        <div class="row">
+            <div class="col-md-9">
+                @RenderBody()
+            </div>
+            <div class="col-md-3">
+                <h3>About Me</h3>
+                <hr/>
+                <img class="img-circle" width="150" height="150" src="~/images/IMG_3804.JPG"/>
+            </div>
+        </div>
         <hr />
         <footer>
-            <p>&copy; 2016 - XYJPersonalSite</p>
+            <p>&copy; @DateTime.Now.Year - xuyongjie</p>
         </footer>
     </div>
 
