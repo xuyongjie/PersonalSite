@@ -31,8 +31,16 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Blogs" asp-action="Index">Blogs</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="About">About Me</a></li>
+                    @*<li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>*@
+                    @*<li>
+                        <div class="input-group">
+                            <input class="form-control" placeholder="Search for...">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">Go!</button>
+                            </span>
+                        </div>
+                    </li>*@
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
             </div>
@@ -44,9 +52,8 @@
                 @RenderBody()
             </div>
             <div class="col-md-3">
-                <h3>About Me</h3>
-                <hr/>
-                <img class="img-circle" width="150" height="150" src="~/images/IMG_3804.JPG"/>
+                <h3>Tags</h3>
+                <hr />
             </div>
         </div>
         <hr />
