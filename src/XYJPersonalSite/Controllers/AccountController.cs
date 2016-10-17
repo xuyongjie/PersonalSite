@@ -87,6 +87,7 @@ namespace XYJPersonalSite.Controllers
 
         //
         // GET: /Account/Register
+        [NonAction]
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Register(string returnUrl = null)
@@ -97,6 +98,7 @@ namespace XYJPersonalSite.Controllers
 
         //
         // POST: /Account/Register
+        [NonAction]
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]

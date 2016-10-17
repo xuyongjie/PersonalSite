@@ -10,11 +10,11 @@ namespace XYJPersonalSite.Models.BusinessModels
     {
         [Required]
         [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString ="{0:yyyy-MM-dd HH:mm:ss}")]
+        [DisplayFormat(DataFormatString ="{0:yyyy-MM-dd}")]
         public DateTime CreateTime { get; set; }
         [Required]
         [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm:ss}")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime ModifyTime { get; set; }
     }
 }

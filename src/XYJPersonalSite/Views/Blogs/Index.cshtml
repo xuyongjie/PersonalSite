@@ -1,10 +1,10 @@
 @model IEnumerable<XYJPersonalSite.Models.BusinessModels.Blog>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "ALL";
 }
 
-<h2>Index</h2>
+<h2>@ViewBag.Title</h2>
 <br/>
 <ul class="media-list">
     @foreach (var item in Model)
@@ -21,6 +21,7 @@
                     <p>
                         @Html.DisplayFor(modelItem => item.Summary)
                     </p>
+                    <label class="label label-success">@item.ModifyTime</label>
                 </div>
             </div>
         </li>
