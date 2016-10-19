@@ -15,21 +15,21 @@ namespace XYJPersonalSite.Repo
         }
 
 
-        public T Add(T item)
+        public async Task<T> Add(T item)
         {
             CheckDispose();
             _context.Add<T>(item);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return item;
         }
 
-        public bool DeleteByKey(Tkey key)
+        public async Task<bool> DeleteByKey(Tkey key)
         {
             CheckDispose();
             try
             {
-                _context.Remove<T>(GetByKey(key));
-                _context.SaveChanges();
+                _context.Remove<T>(await GetByKey(key));
+                await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception e)
@@ -38,13 +38,13 @@ namespace XYJPersonalSite.Repo
             }
         }
 
-        public bool Edit(T item)
+        public async Task<bool> Edit(T item)
         {
             CheckDispose();
             try
             {
                 _context.Set<T>().Update(item);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception e)
@@ -53,23 +53,23 @@ namespace XYJPersonalSite.Repo
             }
         }
 
-        public ICollection<T> GetAll()
+        public virtual async Task<ICollection<T>> GetAll()
         {
             CheckDispose();
-            return _context.Set<T>().ToList();
+            return await _context.Set<T>().ToListAsync();
         }
 
-        public T GetByKey(Tkey key)
+        public async Task<T> GetByKey(Tkey key)
         {
-            return GetItemByKey(key);
+            return await GetItemByKeyAsync(key);
         }
 
-        public abstract T GetItemByKey(Tkey key);
+        public abstract Task<T> GetItemByKeyAsync(Tkey key);
 
-        public ICollection<T> GetListBy(Func<T, bool> expression)
+        public virtual Task<ICollection<T>> GetListBy(Func<T, bool> expression)
         {
             CheckDispose();
-            return _context.Set<T>().Where(expression).ToList();
+            return  Task.FromResult((ICollection<T>)_context.Set<T>().Where(expression).ToList());
         }
 
         protected void CheckDispose()

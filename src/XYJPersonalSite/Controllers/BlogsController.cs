@@ -37,8 +37,7 @@ namespace XYJPersonalSite.Controllers
         // GET: Blogs
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Blogs.Include(b => b.PostUser);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await _repo.GetAll());
         }
         [AllowAnonymous]
         // GET: Blogs/Details/5

@@ -13,10 +13,24 @@ namespace XYJPersonalSite.Repo
         {
         }
 
-        public override Blog GetItemByKey(int key)
+
+        public override async Task<Blog> GetItemByKeyAsync(int key)
         {
             CheckDispose();
-            return _context.Set<Blog>().FirstOrDefault(b => b.Id == key);
+            return await _context.Set<Blog>().FirstOrDefaultAsync(b => b.Id == key);
+        }
+
+
+        public override Task<ICollection<Blog>> GetListBy(Func<Blog, bool> expression)
+        {
+            CheckDispose();
+            return Task.FromResult((ICollection<Blog>)_context.Set<Blog>().Include(b=>b.PostUser).Where(expression).OrderByDescending(b => b.CreateTime).ToList());
+        }
+
+        public override async Task<ICollection<Blog>> GetAll()
+        {
+            CheckDispose();
+            return await _context.Set<Blog>().Include(b=>b.PostUser).OrderByDescending(e=>e.CreateTime).ToListAsync();
         }
     }
 }

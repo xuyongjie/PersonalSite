@@ -1,0 +1,6 @@
+@model IEnumerable<XYJPersonalSite.Models.BusinessModels.Tag>
+
+
+@foreach (var item in Model) {
+            <label class="label label-primary">@item.TagName</label>
+}
