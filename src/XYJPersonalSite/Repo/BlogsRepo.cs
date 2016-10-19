@@ -15,6 +15,7 @@ namespace XYJPersonalSite.Repo
 
         public override Blog GetItemByKey(int key)
         {
+            CheckDispose();
             return _context.Set<Blog>().FirstOrDefault(b => b.Id == key);
         }
     }

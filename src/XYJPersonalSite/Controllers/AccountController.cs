@@ -136,7 +136,7 @@ namespace XYJPersonalSite.Controllers
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation(4, "User logged out.");
-            return RedirectToAction(nameof(HomeController.Index), "Home");
+            return RedirectToAction(nameof(BlogsController.Index), "Blogs");
         }
 
         //
