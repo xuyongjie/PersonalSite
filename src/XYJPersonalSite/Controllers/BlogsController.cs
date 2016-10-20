@@ -104,7 +104,7 @@ namespace XYJPersonalSite.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CreateTime,LikeCount,ModifyTime,PostUserId,ReadCount,Summary,Title,Content")] Blog blog)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,LikeCount,PostUserId,ReadCount,Summary,Title,Content")] Blog blog)
         {
             if (id != blog.Id)
             {
