@@ -37,6 +37,22 @@ namespace XYJPersonalSite.Models
                         Name = MediaType.MARKDOWN
                     });
                 }
+                if(!context.BlogTypes.Any())
+                {
+                    context.BlogTypes.AddRange(new BlogType{
+                        TypeName=BlogType.TECH,
+                        TypeDesc=BlogType.TECH_DESC,
+                        ThisTypeBlogCount=0
+                    },new BlogType{
+                        TypeName=BlogType.LIFE,
+                        TypeDesc=BlogType.LIFE_DESC,
+                        ThisTypeBlogCount=0
+                    }, new BlogType{
+                        TypeName=BlogType.IDEA,
+                        TypeDesc=BlogType.IDEA_DESC,
+                        ThisTypeBlogCount=0
+                    });
+                }
                 context.SaveChanges();
             }
         }
