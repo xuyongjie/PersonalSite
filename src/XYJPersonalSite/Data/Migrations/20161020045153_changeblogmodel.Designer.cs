@@ -8,9 +8,10 @@ using XYJPersonalSite.Data;
 namespace XYJPersonalSite.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161020045153_changeblogmodel")]
+    partial class changeblogmodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -190,6 +191,10 @@ namespace XYJPersonalSite.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("BlogTypeName");
+
+                    b.Property<string>("BlogTypeTypeName");
+
                     b.Property<string>("Content");
 
                     b.Property<DateTime>("CreateTime");
@@ -208,13 +213,11 @@ namespace XYJPersonalSite.Data.Migrations
                     b.Property<string>("Title")
                         .IsRequired();
 
-                    b.Property<string>("TypeName");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("PostUserId");
+                    b.HasIndex("BlogTypeTypeName");
 
-                    b.HasIndex("TypeName");
+                    b.HasIndex("PostUserId");
 
                     b.ToTable("Blogs");
                 });
@@ -342,13 +345,13 @@ namespace XYJPersonalSite.Data.Migrations
 
             modelBuilder.Entity("XYJPersonalSite.Models.BusinessModels.Blog", b =>
                 {
+                    b.HasOne("BlogType", "BlogType")
+                        .WithMany("Blogs")
+                        .HasForeignKey("BlogTypeTypeName");
+
                     b.HasOne("XYJPersonalSite.Models.ApplicationUser", "PostUser")
                         .WithMany()
                         .HasForeignKey("PostUserId");
-
-                    b.HasOne("BlogType", "BlogType")
-                        .WithMany("Blogs")
-                        .HasForeignKey("TypeName");
                 });
 
             modelBuilder.Entity("XYJPersonalSite.Models.BusinessModels.BlogTag", b =>

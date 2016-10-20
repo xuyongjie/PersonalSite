@@ -20,8 +20,7 @@ namespace XYJPersonalSite.Models.BusinessModels
         public List<Comment> Comments { get; set; }
         public string PostUserId { get; set; }
         public ApplicationUser PostUser { get; set; }
-        [ForeignKey("TypeName")]
-        public string BlogTypeName{get;set;}
+        public string TypeName{get;set;}
         public BlogType BlogType{get;set;}
     }
 }
