@@ -60,3 +60,7 @@ textarea {
 .float-right{
     float:right
 }
+
+.absolute-position{
+    position:absolute
+}

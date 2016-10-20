@@ -17,7 +17,7 @@ namespace XYJPersonalSite.Repo
         public override async Task<Blog> GetItemByKeyAsync(int key)
         {
             CheckDispose();
-            return await _context.Set<Blog>().FirstOrDefaultAsync(b => b.Id == key);
+            return await _context.Set<Blog>().Include(b=>b.Comments).FirstOrDefaultAsync(b => b.Id == key);
         }
 
 
