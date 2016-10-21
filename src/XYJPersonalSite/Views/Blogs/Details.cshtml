@@ -22,7 +22,7 @@
         <div class="panel-heading">Comments (@Model.Comments.Count)</div>
         <div class="panel-body">
             <div>
-                <form id="comment_form">
+                <form id="comment_form" action="/Comments/Create" method="POST">
                     <input name="BlogId" id="BlogId" type="hidden" value="@Model.Id" />
                     <input name="ToCommentId" id="ToCommentId" type="hidden" value="-1" />                        
                     <div class="form-group">

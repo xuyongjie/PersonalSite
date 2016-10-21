@@ -55,10 +55,9 @@ namespace XYJPersonalSite.Controllers
             {
                 _context.Add(comment);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return Redirect("/Blogs/Details/"+comment.BlogId);
             }
-            ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Summary", comment.BlogId);
-            return View(comment);
+            return null;
         }
 
         // GET: Comments/Edit/5
