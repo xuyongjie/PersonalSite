@@ -1,4 +1,4 @@
-@model XYJPersonalSite.Models.BusinessModels.Blog
+@model XYJPersonalSite.Models.BusinessViewModels.BlogDetailDTO
 
 @{
     ViewData["Title"] = "Create";
@@ -9,59 +9,38 @@
 <form asp-action="Create">
     <div class="form-horizontal">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        @*<div class="form-group">
-            <label asp-for="CreateTime" class="col-md-2 control-label"></label>
+        <div class="form-group">
+            <label asp-for="Blog.Title" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="CreateTime" class="form-control" />
-                <span asp-validation-for="CreateTime" class="text-danger" />
+                <input asp-for="Blog.Title" class="form-control none-max-width" />
+                <span asp-validation-for="Blog.Title" class="text-danger" />
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="LikeCount" class="col-md-2 control-label"></label>
+            <label asp-for="Blog.Summary" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="LikeCount" class="form-control" />
-                <span asp-validation-for="LikeCount" class="text-danger" />
+                <textarea class="form-control none-max-width" rows="4" asp-for="Blog.Summary"></textarea>
+                <span asp-validation-for="Blog.Summary" class="text-danger" />
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="ModifyTime" class="col-md-2 control-label"></label>
+            <label asp-for="Blog.Content" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="ModifyTime" class="form-control" />
-                <span asp-validation-for="ModifyTime" class="text-danger" />
-            </div>
-        </div>*@
-        @*<div class="form-group">
-            <label asp-for="PostUserId" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <select asp-for="PostUserId" class ="form-control" asp-items="ViewBag.PostUserId"></select>
-            </div>
-        </div>*@
-        @*<div class="form-group">
-            <label asp-for="ReadCount" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="ReadCount" class="form-control" />
-                <span asp-validation-for="ReadCount" class="text-danger" />
-            </div>
-        </div>*@
-        <div class="form-group">
-            <label asp-for="Title" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Title" class="form-control none-max-width" />
-                <span asp-validation-for="Title" class="text-danger" />
+                <textarea class="form-control none-max-width" rows="16" asp-for="Blog.Content"></textarea>
+                <span asp-validation-for="Blog.Content" class="text-danger" />
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="Summary" class="col-md-2 control-label"></label>
+            <label asp-for="Blog.TypeName" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <textarea class="form-control none-max-width" rows="4" asp-for="Summary"></textarea>
-                <span asp-validation-for="Summary" class="text-danger" />
+                <select asp-for="Blog.TypeName" class="form-control" asp-items="ViewBag.BlogTypes"></select>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="Content" class="col-md-2 control-label"></label>
+            <label asp-for="Tags" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <textarea class="form-control none-max-width" rows="16" asp-for="Content"></textarea>
-                <span asp-validation-for="Content" class="text-danger" />
+                <input asp-for="Tags" class="form-control none-max-width" placeholder="split by , in english" />
+                <span asp-validation-for="Tags" class="text-danger" />
             </div>
         </div>
         <div class="form-group">
@@ -71,11 +50,25 @@
         </div>
     </div>
 </form>
-
+<hr />
+<form class="form-horizontal col-md-10 col-md-offset-2" asp-action="UploadFiles" asp-controller="File" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="exampleInputFile">File input</label>
+        <input type="file" name="files" id="exampleInputFile">
+    </div>
+    <div class="form-group">
+        <input class="btn btn-default" type="submit" value="Upload" />
+    </div>
+</form>
+<div>
+    <ul id="upload-images-ul">
+        
+    </ul>
+</div>
+<br />
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

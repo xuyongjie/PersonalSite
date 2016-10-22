@@ -8,6 +8,11 @@ namespace XYJPersonalSite.Models.BusinessModels
 {
     public class Tag
     {
+        public Tag(string tagName)
+        {
+            TagName = tagName;
+        }
+        public Tag() { }
         [Key]
         public string TagName { get; set; }
 

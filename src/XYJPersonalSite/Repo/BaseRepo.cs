@@ -18,7 +18,7 @@ namespace XYJPersonalSite.Repo
         public async Task<T> Add(T item)
         {
             CheckDispose();
-            _context.Add<T>(item);
+            _context.Add(item);
             await _context.SaveChangesAsync();
             return item;
         }
@@ -53,7 +53,7 @@ namespace XYJPersonalSite.Repo
             }
         }
 
-        public virtual async Task<ICollection<T>> GetAll()
+        public virtual async Task<IEnumerable<T>> GetAll()
         {
             CheckDispose();
             return await _context.Set<T>().ToListAsync();
@@ -66,10 +66,10 @@ namespace XYJPersonalSite.Repo
 
         public abstract Task<T> GetItemByKeyAsync(Tkey key);
 
-        public virtual Task<ICollection<T>> GetListBy(Func<T, bool> expression)
+        public virtual Task<IEnumerable<T>> GetListBy(Func<T, bool> expression)
         {
             CheckDispose();
-            return  Task.FromResult((ICollection<T>)_context.Set<T>().Where(expression).ToList());
+            return  Task.FromResult((IEnumerable<T>)_context.Set<T>().Where(expression).ToList());
         }
 
         protected void CheckDispose()
@@ -112,6 +112,11 @@ namespace XYJPersonalSite.Repo
             Dispose(true);
             // TODO: uncomment the following line if the finalizer is overridden above.
             // GC.SuppressFinalize(this);
+        }
+
+        public async Task<int> DeleteBySQL(string sql)
+        {
+            return await _context.Database.ExecuteSqlCommandAsync(sql);
         }
         #endregion
     }

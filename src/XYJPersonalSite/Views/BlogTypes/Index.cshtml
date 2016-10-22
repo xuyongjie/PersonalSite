@@ -1,0 +1,23 @@
+@model IEnumerable<XYJPersonalSite.Models.BusinessModels.BlogType>
+@{ 
+    int index = 0;
+}
+<li>
+    <a asp-controller="Blogs" asp-action="Index">
+        All
+    </a>
+</li>
+<li class="divider"></li>
+@foreach (var item in Model)
+{
+    index++;
+    <li>
+        <a title="@item.TypeDesc" asp-controller="Blogs" asp-action="GetByType" asp-route-typename="@item.TypeName">
+            @item.TypeName
+        </a>
+    </li>
+    if(index<Model.Count())
+    {
+        <li class="divider"></li>
+    }
+}

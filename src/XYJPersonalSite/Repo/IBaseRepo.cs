@@ -7,11 +7,12 @@ namespace XYJPersonalSite.Repo
 {
     interface IBaseRepo<T,Tkey> where T: class
     {
-        Task<ICollection<T>> GetAll();
+        Task<IEnumerable<T>> GetAll();
         Task<T> GetByKey(Tkey key);
-        Task<ICollection<T>> GetListBy(Func<T,bool> expression);
+        Task<IEnumerable<T>> GetListBy(Func<T,bool> expression);
         Task<T> Add(T item);
         Task<bool> Edit(T item);
         Task<bool> DeleteByKey(Tkey key);
+        Task<int> DeleteBySQL(string sql);
     }
 }

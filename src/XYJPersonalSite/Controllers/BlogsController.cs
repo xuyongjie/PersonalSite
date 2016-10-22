@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using XYJPersonalSite.Models;
 using XYJPersonalSite.Repo;
+using XYJPersonalSite.Models.BusinessViewModels;
 
 namespace XYJPersonalSite.Controllers
 {
@@ -22,7 +23,7 @@ namespace XYJPersonalSite.Controllers
 
         private readonly ApplicationDbContext _context;
 
-        private readonly IBaseRepo<Blog,int> _repo;
+        private readonly BlogsRepo _repo;
 
         public BlogsController(ApplicationDbContext context,
                     UserManager<ApplicationUser> userManager,
@@ -35,10 +36,37 @@ namespace XYJPersonalSite.Controllers
         }
         [AllowAnonymous]
         // GET: Blogs
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View(await _repo.GetAll());
+            if (string.IsNullOrEmpty(searchString))
+            {
+                ViewBag.Title = "All articles";
+                return View(await _repo.GetAll());
+            }
+            else
+            {
+                ViewBag.Title = "Search result for \"" + searchString + "\"";
+                return View(await _repo.Search(searchString));
+            }
+
         }
+
+        [AllowAnonymous]
+        // GET: Blogs
+        public async Task<IActionResult> GetByType(string typeName)
+        {
+            ViewBag.Title = "Articles in " + typeName;
+            return View("Index", await _repo.GetListBy(b => b.TypeName == typeName));
+        }
+
+        [AllowAnonymous]
+        // GET: Blogs
+        public async Task<IActionResult> GetByTag(string tagName)
+        {
+            ViewBag.Title = "Articles in " + tagName;
+            return View("Index", await _repo.GetByTag(tagName));
+        }
+
         [AllowAnonymous]
         // GET: Blogs/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -48,7 +76,7 @@ namespace XYJPersonalSite.Controllers
                 return NotFound();
             }
 
-            var blog = await _context.Blogs.Include(b=>b.Comments).SingleOrDefaultAsync(m => m.Id == id);
+            var blog = await _repo.GetBlogDetail(id.Value);
             if (blog == null)
             {
                 return NotFound();
@@ -59,6 +87,8 @@ namespace XYJPersonalSite.Controllers
         // GET: Blogs/Create
         public IActionResult Create()
         {
+            ViewBag.BlogTypes = new SelectList(new BlogTypeRepo(_context).GetAll().Result, "TypeName", "TypeDesc");
+            ViewBag.Tags = "";
             return View();
         }
 
@@ -67,20 +97,34 @@ namespace XYJPersonalSite.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Summary,Title,Content")] Blog blog)
+        public async Task<IActionResult> Create([Bind("Blog,Tags,Blog.Summary,Blog.Title,Blog.Content,Blog.TypeName")] BlogDetailDTO blogDetail)
         {
-            blog.CreateTime = DateTime.Now;
-            blog.ModifyTime = DateTime.Now;
-            blog.LikeCount = 0;
-            blog.ReadCount = 0;
-            blog.PostUserId = _userManager.GetUserId(HttpContext.User);
+            blogDetail.Blog.CreateTime = DateTime.Now;
+            blogDetail.Blog.ModifyTime = DateTime.Now;
+            blogDetail.Blog.LikeCount = 0;
+            blogDetail.Blog.ReadCount = 0;
+            blogDetail.Blog.PostUserId = _userManager.GetUserId(HttpContext.User);
             if (ModelState.IsValid)
             {
-                _context.Add(blog);
-                await _context.SaveChangesAsync();
+                await _repo.Add(blogDetail.Blog);
+                if (!string.IsNullOrEmpty(blogDetail.Tags))
+                {
+                    var tags = blogDetail.Tags.Split(new char[] { ',' });
+                    TagsRepo tagsRepo = new TagsRepo(_context);
+                    BlogTagRepo blogTagRepo = new BlogTagRepo(_context);
+                    foreach (var item in tags)
+                    {
+                        if (await tagsRepo.GetByKey(item.Trim()) == null)
+                        {
+                            await tagsRepo.Add(new Tag(item.Trim()));
+                        }
+                        BlogTag bt = new BlogTag(blogDetail.Blog.Id, item.Trim());
+                        await blogTagRepo.Add(bt);
+                    }
+                }
                 return RedirectToAction("Index");
             }
-            return View(blog);
+            return View(blogDetail);
         }
 
         // GET: Blogs/Edit/5
@@ -91,12 +135,14 @@ namespace XYJPersonalSite.Controllers
                 return NotFound();
             }
 
-            var blog = await _context.Blogs.SingleOrDefaultAsync(m => m.Id == id);
-            if (blog == null)
+            var blogDetail = await _repo.GetBlogDetail(id.Value);
+            var blogtypes = await new BlogTypeRepo(_context).GetAll();
+            ViewBag.BlogTypes = new SelectList(blogtypes, "TypeName", "TypeDesc", blogDetail.Blog.BlogType);
+            if (blogDetail == null)
             {
                 return NotFound();
             }
-            return View(blog);
+            return View(blogDetail);
         }
 
         // POST: Blogs/Edit/5
@@ -104,9 +150,9 @@ namespace XYJPersonalSite.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,LikeCount,PostUserId,ReadCount,Summary,Title,Content")] Blog blog)
+        public async Task<IActionResult> Edit(int id, [Bind("Blog,Tags,Blog.Id,Blog.LikeCount,Blog.PostUserId,Blog.ReadCount,Blog.Summary,Blog.Title,Blog.Content,Blog.TypeName")] BlogDetailDTO blogDetail)
         {
-            if (id != blog.Id)
+            if (id != blogDetail.Blog.Id)
             {
                 return NotFound();
             }
@@ -115,12 +161,27 @@ namespace XYJPersonalSite.Controllers
             {
                 try
                 {
-                    _context.Update(blog);
-                    await _context.SaveChangesAsync();
+                    await _repo.Edit(blogDetail.Blog);
+                    if (!string.IsNullOrEmpty(blogDetail.Tags))
+                    {
+                        var tags = blogDetail.Tags.Split(new char[] { ',' });
+                        TagsRepo tagsRepo = new TagsRepo(_context);
+                        BlogTagRepo blogTagRepo = new BlogTagRepo(_context);
+                        await blogTagRepo.DeleteBySQL("delete from blogtags where blogid=" + id);
+                        foreach (var item in tags)
+                        {
+                            if (await tagsRepo.GetByKey(item.Trim()) == null)
+                            {
+                                await tagsRepo.Add(new Tag(item.Trim()));
+                            }
+                            BlogTag bt = new BlogTag(blogDetail.Blog.Id, item.Trim());
+                            await blogTagRepo.Add(bt);
+                        }
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BlogExists(blog.Id))
+                    if (!BlogExists(blogDetail.Blog.Id))
                     {
                         return NotFound();
                     }
@@ -131,8 +192,8 @@ namespace XYJPersonalSite.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            ViewData["PostUserId"] = new SelectList(_context.Users, "Id", "Id", blog.PostUserId);
-            return View(blog);
+            ViewData["PostUserId"] = new SelectList(_context.Users, "Id", "Id", blogDetail.Blog.PostUserId);
+            return View(blogDetail);
         }
 
         // GET: Blogs/Delete/5

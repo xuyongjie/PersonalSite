@@ -8,6 +8,12 @@ namespace XYJPersonalSite.Models.BusinessModels
 {
     public class BlogTag
     {
+        public BlogTag(int blogId,string tagName)
+        {
+            BlogId = blogId;
+            TagName = tagName;
+        }
+        public BlogTag() { }
         [Required]
         public int BlogId { get; set; }
         public Blog Blog { get; set; }
