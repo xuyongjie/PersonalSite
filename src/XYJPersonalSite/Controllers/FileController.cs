@@ -28,7 +28,10 @@ namespace XYJPersonalSite.Controllers
                                 .Parse(file.ContentDisposition)
                                 .FileName
                                 .Trim('"');
-                filename = _environment.WebRootPath + @"\images\article_images\"+DateTime.Now.ToFileTime()+filename.Substring(filename.LastIndexOf('.'));            
+                string extension = filename.Substring(filename.LastIndexOf('.'));
+                filename = Path.Combine(_environment.WebRootPath, "images");
+                filename = Path.Combine(filename, "article_images");
+                filename = (Path.Combine(filename, DateTime.Now.ToFileTime().ToString()+extension));       
                 size += file.Length;
                 using (FileStream fs = System.IO.File.Create(filename))
                 {
@@ -36,7 +39,6 @@ namespace XYJPersonalSite.Controllers
                     fs.Flush();
                 }
             }
-            string resultPath = _environment.ContentRootPath;
             return Content(filename);
         }
     }
