@@ -5,30 +5,16 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using XYJPersonalSite.Data;
 
-namespace XYJPersonalSite.Data.Migrations
+namespace XYJPersonalSite.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20161020044409_addblogtype")]
-    partial class addblogtype
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("BlogType", b =>
-                {
-                    b.Property<string>("TypeName");
-
-                    b.Property<int>("ThisTypeBlogCount");
-
-                    b.Property<string>("TypeDesc");
-
-                    b.HasKey("TypeName");
-
-                    b.ToTable("BlogTypes");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole", b =>
                 {
@@ -188,12 +174,7 @@ namespace XYJPersonalSite.Data.Migrations
 
             modelBuilder.Entity("XYJPersonalSite.Models.BusinessModels.Blog", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("BlogTypeName");
-
-                    b.Property<string>("BlogTypeTypeName");
+                    b.Property<string>("Id");
 
                     b.Property<string>("Content");
 
@@ -213,18 +194,20 @@ namespace XYJPersonalSite.Data.Migrations
                     b.Property<string>("Title")
                         .IsRequired();
 
+                    b.Property<string>("TypeName");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("BlogTypeTypeName");
-
                     b.HasIndex("PostUserId");
+
+                    b.HasIndex("TypeName");
 
                     b.ToTable("Blogs");
                 });
 
             modelBuilder.Entity("XYJPersonalSite.Models.BusinessModels.BlogTag", b =>
                 {
-                    b.Property<int>("BlogId");
+                    b.Property<string>("BlogId");
 
                     b.Property<string>("TagName");
 
@@ -237,12 +220,27 @@ namespace XYJPersonalSite.Data.Migrations
                     b.ToTable("BlogTags");
                 });
 
+            modelBuilder.Entity("XYJPersonalSite.Models.BusinessModels.BlogType", b =>
+                {
+                    b.Property<string>("TypeName");
+
+                    b.Property<int>("ThisTypeBlogCount");
+
+                    b.Property<string>("TypeDesc");
+
+                    b.HasKey("TypeName");
+
+                    b.ToTable("BlogTypes");
+                });
+
             modelBuilder.Entity("XYJPersonalSite.Models.BusinessModels.Comment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("BlogId");
+
+                    b.Property<string>("BlogId1");
 
                     b.Property<string>("Content")
                         .IsRequired();
@@ -261,7 +259,7 @@ namespace XYJPersonalSite.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BlogId");
+                    b.HasIndex("BlogId1");
 
                     b.ToTable("Comments");
                 });
@@ -345,13 +343,13 @@ namespace XYJPersonalSite.Data.Migrations
 
             modelBuilder.Entity("XYJPersonalSite.Models.BusinessModels.Blog", b =>
                 {
-                    b.HasOne("BlogType", "BlogType")
-                        .WithMany("Blogs")
-                        .HasForeignKey("BlogTypeTypeName");
-
                     b.HasOne("XYJPersonalSite.Models.ApplicationUser", "PostUser")
                         .WithMany()
                         .HasForeignKey("PostUserId");
+
+                    b.HasOne("XYJPersonalSite.Models.BusinessModels.BlogType", "BlogType")
+                        .WithMany("Blogs")
+                        .HasForeignKey("TypeName");
                 });
 
             modelBuilder.Entity("XYJPersonalSite.Models.BusinessModels.BlogTag", b =>
@@ -371,8 +369,7 @@ namespace XYJPersonalSite.Data.Migrations
                 {
                     b.HasOne("XYJPersonalSite.Models.BusinessModels.Blog", "Blog")
                         .WithMany("Comments")
-                        .HasForeignKey("BlogId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("BlogId1");
                 });
 
             modelBuilder.Entity("XYJPersonalSite.Models.BusinessModels.Media", b =>

@@ -33,11 +33,11 @@
 
                     <li class="dropdown">
                         <a class="dropdown-toggle" role="button" aria-expanded="false" href="#" data-toggle="dropdown">All Articles<span class="caret"></span></a>
-                        <ul class="dropdown-menu" id="articles-dropdown-ul" role="menu">
+                        <ul class="dropdown-menu" role="menu">
+                            @await Component.InvokeAsync("BlogTypes")
                         </ul>
                     </li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About Me</a></li>
-                    @*<li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>*@
                 </ul>
                 <form class="navbar-form navbar-left" role="search" asp-action="Index">
                     <div class="form-group">
@@ -55,10 +55,7 @@
                 @RenderBody()
             </div>
             <div class="col-md-3 hidden-sm hidden-xs">
-                <h3>Top Tags</h3>
-                <hr />
-                <div id="tags">
-                </div>
+                @await Component.InvokeAsync("Tags",new { topCount=10 })
             </div>
         </div>
         <hr />

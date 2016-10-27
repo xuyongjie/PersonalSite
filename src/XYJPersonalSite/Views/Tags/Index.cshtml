@@ -1,7 +1,0 @@
-@model IEnumerable<XYJPersonalSite.Models.BusinessModels.Tag>
-
-
-@foreach (var item in Model)
-{
-    <a class="btn btn-info" asp-controller="Blogs" asp-action="GetByTag" asp-route-tagname="@item.TagName">@item.TagName</a>
-}

@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -15,6 +17,13 @@ namespace XYJPersonalSite.Models
         {
             using (var context = new ApplicationDbContext(serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
             {
+
+                //if(!context.Users.Any())
+                //{
+                //    var user = new ApplicationUser { UserName = config["UserName"], Email = config["UserName"] };
+                //    var result = userManager.CreateAsync(user, config["Password"]);
+                //}
+
                 if (!context.MediaTypes.Any())
                 {
                     context.MediaTypes.AddRange(new MediaType

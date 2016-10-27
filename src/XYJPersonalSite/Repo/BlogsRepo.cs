@@ -9,14 +9,14 @@ using System.Text;
 
 namespace XYJPersonalSite.Repo
 {
-    public class BlogsRepo : BaseRepo<Blog, int>
+    public class BlogsRepo : BaseRepo<Blog, string>
     {
         public BlogsRepo(DbContext context) : base(context)
         {
         }
 
 
-        public override async Task<Blog> GetItemByKeyAsync(int key)
+        public override async Task<Blog> GetItemByKeyAsync(string key)
         {
             CheckDispose();
             return await _context.Set<Blog>().Include(b => b.Comments).FirstOrDefaultAsync(b => b.Id == key);
@@ -53,7 +53,7 @@ namespace XYJPersonalSite.Repo
             return blogs;
         }
 
-        public async Task<BlogDetailDTO> GetBlogDetail(int blogId)
+        public async Task<BlogDetailDTO> GetBlogDetail(string blogId)
         {
             Blog blog=await GetItemByKeyAsync(blogId);
             if(blog==null)

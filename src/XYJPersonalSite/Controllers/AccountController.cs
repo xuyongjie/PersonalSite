@@ -461,7 +461,7 @@ namespace XYJPersonalSite.Controllers
             }
             else
             {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
+                return RedirectToAction(nameof(BlogsController.Index), "Blogs");
             }
         }
 

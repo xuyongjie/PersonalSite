@@ -69,14 +69,14 @@ namespace XYJPersonalSite.Controllers
 
         [AllowAnonymous]
         // GET: Blogs/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string id)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(id))
             {
                 return NotFound();
             }
 
-            var blog = await _repo.GetBlogDetail(id.Value);
+            var blog = await _repo.GetBlogDetail(id);
             if (blog == null)
             {
                 return NotFound();
@@ -99,6 +99,7 @@ namespace XYJPersonalSite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Blog,Tags,Blog.Summary,Blog.Title,Blog.Content,Blog.TypeName")] BlogDetailDTO blogDetail)
         {
+            blogDetail.Blog.Id = Guid.NewGuid().ToString();
             blogDetail.Blog.CreateTime = DateTime.Now;
             blogDetail.Blog.ModifyTime = DateTime.Now;
             blogDetail.Blog.LikeCount = 0;
@@ -128,14 +129,14 @@ namespace XYJPersonalSite.Controllers
         }
 
         // GET: Blogs/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string id)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(id))
             {
                 return NotFound();
             }
 
-            var blogDetail = await _repo.GetBlogDetail(id.Value);
+            var blogDetail = await _repo.GetBlogDetail(id);
             var blogtypes = await new BlogTypeRepo(_context).GetAll();
             ViewBag.BlogTypes = new SelectList(blogtypes, "TypeName", "TypeDesc", blogDetail.Blog.BlogType);
             if (blogDetail == null)
@@ -150,7 +151,7 @@ namespace XYJPersonalSite.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Blog,Tags,Blog.Id,Blog.LikeCount,Blog.PostUserId,Blog.ReadCount,Blog.Summary,Blog.Title,Blog.Content,Blog.TypeName")] BlogDetailDTO blogDetail)
+        public async Task<IActionResult> Edit(string id, [Bind("Blog,Tags,Blog.Id,Blog.LikeCount,Blog.PostUserId,Blog.ReadCount,Blog.Summary,Blog.Title,Blog.Content,Blog.TypeName")] BlogDetailDTO blogDetail)
         {
             if (id != blogDetail.Blog.Id)
             {
@@ -167,7 +168,9 @@ namespace XYJPersonalSite.Controllers
                         var tags = blogDetail.Tags.Split(new char[] { ',' });
                         TagsRepo tagsRepo = new TagsRepo(_context);
                         BlogTagRepo blogTagRepo = new BlogTagRepo(_context);
-                        await blogTagRepo.DeleteBySQL("delete from blogtags where blogid=" + id);
+                        var query = from bt in _context.BlogTags where bt.BlogId ==id select bt;
+                       
+                        await blogTagRepo.DeleteBySQL("delete from blogtags where blogid='" + id+"'");
                         foreach (var item in tags)
                         {
                             if (await tagsRepo.GetByKey(item.Trim()) == null)
@@ -197,9 +200,9 @@ namespace XYJPersonalSite.Controllers
         }
 
         // GET: Blogs/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string id)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(id))
             {
                 return NotFound();
             }
@@ -216,7 +219,7 @@ namespace XYJPersonalSite.Controllers
         // POST: Blogs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var blog = await _context.Blogs.SingleOrDefaultAsync(m => m.Id == id);
             _context.Blogs.Remove(blog);
@@ -224,7 +227,7 @@ namespace XYJPersonalSite.Controllers
             return RedirectToAction("Index");
         }
 
-        private bool BlogExists(int id)
+        private bool BlogExists(string id)
         {
             return _context.Blogs.Any(e => e.Id == id);
         }
