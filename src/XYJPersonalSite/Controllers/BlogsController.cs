@@ -36,36 +36,43 @@ namespace XYJPersonalSite.Controllers
         }
         [AllowAnonymous]
         // GET: Blogs
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string searchString,string typeName,string tagName)
         {
-            if (string.IsNullOrEmpty(searchString))
-            {
-                ViewBag.Title = "All articles";
-                return View(await _repo.GetAll());
-            }
-            else
+            if (!string.IsNullOrWhiteSpace(searchString))
             {
                 ViewBag.Title = "Search result for \"" + searchString + "\"";
                 return View(await _repo.Search(searchString));
+
             }
-
+            if(!string.IsNullOrWhiteSpace(typeName))
+            {
+                ViewBag.Title = "Articles in " + typeName;
+                return View("Index", await _repo.GetListBy(b => b.TypeName == typeName));
+            }
+            if(!string.IsNullOrWhiteSpace(tagName))
+            {
+                ViewBag.Title = "Articles in " + tagName;
+                return View("Index", await _repo.GetByTag(tagName));
+            }
+            ViewBag.Title = "All articles";
+            return View(await _repo.GetAll());
         }
 
-        [AllowAnonymous]
-        // GET: Blogs
-        public async Task<IActionResult> GetByType(string typeName)
-        {
-            ViewBag.Title = "Articles in " + typeName;
-            return View("Index", await _repo.GetListBy(b => b.TypeName == typeName));
-        }
+        //[AllowAnonymous]
+        //// GET: Blogs
+        //public async Task<IActionResult> GetByType(string typeName)
+        //{
+        //    ViewBag.Title = "Articles in " + typeName;
+        //    return View("Index", await _repo.GetListBy(b => b.TypeName == typeName));
+        //}
 
-        [AllowAnonymous]
-        // GET: Blogs
-        public async Task<IActionResult> GetByTag(string tagName)
-        {
-            ViewBag.Title = "Articles in " + tagName;
-            return View("Index", await _repo.GetByTag(tagName));
-        }
+        //[AllowAnonymous]
+        //// GET: Blogs
+        //public async Task<IActionResult> GetByTag(string tagName)
+        //{
+        //    ViewBag.Title = "Articles in " + tagName;
+        //    return View("Index", await _repo.GetByTag(tagName));
+        //}
 
         [AllowAnonymous]
         // GET: Blogs/Details/5

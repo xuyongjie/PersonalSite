@@ -17,7 +17,7 @@
     </environment>
 </head>
 <body>
-    <div class="navbar navbar-default navbar-fixed-top absolute-position">
+    <div class="navbar navbar-inverse navbar-fixed-top absolute-position">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -39,7 +39,7 @@
                     </li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About Me</a></li>
                 </ul>
-                <form class="navbar-form navbar-left" role="search" asp-action="Index">
+                <form class="navbar-form navbar-left" role="search" asp-action="Index" method="get">
                     <div class="form-group">
                         <input name="searchString" class="form-control" placeholder="Search" />
                     </div>
