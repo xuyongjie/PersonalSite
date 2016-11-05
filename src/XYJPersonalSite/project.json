@@ -1,4 +1,4 @@
-﻿{
+{
   "userSecretsId": "aspnet-XYJPersonalSite-54979251-59b3-412d-ad94-79da3127799e",
 
   "dependencies": {
@@ -6,6 +6,7 @@
       "version": "1.0.0",
       "type": "platform"
     },
+    "Microsoft.AspNetCore.Session": "1.0.0",
     "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": "1.0.0",
@@ -42,7 +43,8 @@
     "Microsoft.VisualStudio.Web.CodeGenerators.Mvc": {
       "version": "1.0.0-preview2-final",
       "type": "build"
-    }
+    },
+    "LibCaptchaImageWarp": "1.0.0-*"
   },
 
   "tools": {

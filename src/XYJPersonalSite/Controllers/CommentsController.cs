@@ -49,15 +49,21 @@ namespace XYJPersonalSite.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Create([Bind("BlogId,Content,Email,Nickname,ToCommentId")] Comment comment)
+        public async Task<IActionResult> Create([Bind("BlogId,Content,Email,Nickname,ToCommentId,VerificationCode")] Comment comment)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(comment);
-                await _context.SaveChangesAsync();
-                return Redirect("/Blogs/Details/"+comment.BlogId);
+                byte[] code = new byte[20];
+                if(HttpContext.Session.TryGetValue(Constant.VERIFICATION_CODE_TAG,out code))
+                {
+                    if(System.Text.Encoding.UTF8.GetString(code).ToUpper().Equals(comment.VerificationCode.ToUpper()))
+                    {
+                        _context.Add(comment);
+                        await _context.SaveChangesAsync();
+                    }
+                }
             }
-            return null;
+            return Redirect("/Blogs/Details/" + comment.BlogId);
         }
 
         // GET: Comments/Edit/5
