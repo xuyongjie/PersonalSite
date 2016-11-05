@@ -3,7 +3,7 @@
 @inject SignInManager<ApplicationUser> SignInManager
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Model.Blog.Title;
 }
 
 <h3>@Model.Blog.Title</h3>
@@ -16,10 +16,9 @@
     @foreach (var item in Model.Blog.Comments)
     {
         <div>
+            <small><strong>@item.Nickname post at @item.CreateTime.ToString("yyyy/MM/dd")</strong></small>
             <p>@item.Content</p>
-            <small class="float-right">-<strong>@item.Nickname</strong></small>
         </div>
-        <br/>
     }
     <div class="panel panel-primary">
         <div class="panel-heading">Comments (@Model.Blog.Comments.Count)</div>
